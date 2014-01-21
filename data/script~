@@ -1,0 +1,6 @@
+#!/bin/sh
+
+geiger -a -r 1 -i 100 -p 0.5 -o geiger.data
+geiger -a -r 1 -i 100 -p 1 -o geiger1.data
+geiger -a -r 1 -i 100 -p 1.5 -o geiger2.data
+geiger -a -r 1 -i 100 -p 2 -o geiger3.data
