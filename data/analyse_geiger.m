@@ -60,4 +60,4 @@ poisson = number_of_points*poisspdf(x2.',lambda).';
 chi_square_gaussian = (1/columns)*sum((col_mean-gaussian).^2/var_geiger);
 
 
-chi_square_poisson = (1/columns)*sum((-(poisson-col_mean)).^2/var_geiger);
+chi_square_poisson = (1/columns)*sum((col_mean-poisson.').^2/var_geiger);
