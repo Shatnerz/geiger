@@ -6,17 +6,17 @@ function [row_mean,row_var,col_mean,col_var] = histogram_analyse (data)
     for row = 1:rows
         this_row = data(row,:);	% extracts single row vector from matrix 
         for i=1:cols
-            this_row(i)=this_row(i)*(i-1); %makes elements into number of jaywalkers seen
+            this_mean(i)=this_row(i)*(i-1); %makes elements into number of jaywalkers seen
         end
-        row_mean(row)=sum(this_row)/intervals; %calculating row mean
+        row_mean(row)=sum(this_mean)/intervals; %calculating row mean
         for j=1:cols %calculating row variance
-            this_row(j)=this_row(j)-row_mean(row);
+            this_row(j)=this_row(j)*((j-1)-row_mean(row)).^2;
         end
-        row_var(row)=sum(this_row.^2)/intervals^2;
+        row_var(row)=sum(this_row)/intervals;
     
     end
   
-      for col = 1:cols
+    for col = 1:cols
         this_col = data(:,col);	% extracts single column vector from matrix
                                 
      
@@ -28,3 +28,5 @@ function [row_mean,row_var,col_mean,col_var] = histogram_analyse (data)
     
     end
    
+     
+end

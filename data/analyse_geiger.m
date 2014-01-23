@@ -46,18 +46,18 @@ end
  
 lambda = mean(lambda);
 x=[0:1:columns];
-poisson = number_of_points*poisspdf(x.',lambda).';
+poisson = number_of_points*poisspdf(x.',lambda);
 
 plot(x,poisson,'--k');
 xlabel('Number of Events','fontsize',14);
 ylabel('Frequency','fontsize',14);
 legend('Data Points','Gaussian Fit','Poisson Fit','location','best');
 
+hold off
 
 gaussian = number_of_points*(1/(sqrt(2*pi*var_geiger)))*(exp(-(x2-mean_geiger).^2/(2*var_geiger)));
-poisson = number_of_points*poisspdf(x2.',lambda).';
+poisson = number_of_points*poisspdf(x2,lambda)
 
 chi_square_gaussian = (1/columns)*sum((col_mean-gaussian).^2/var_geiger);
 
-
-chi_square_poisson = (1/columns)*sum((col_mean-poisson.').^2/var_geiger);
+chi_square_poisson = (1/columns)*sum((col_mean-poisson).^2/var_geiger);
