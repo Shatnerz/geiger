@@ -1,0 +1,5 @@
+#!/bin/sh
+
+geiger -a -r 1 -i 100 -p 0.5 -o geiger.data
+geiger -a -r 1 -i 100 -p 1 -o geiger1.data
+echo 'Test'
