@@ -7,9 +7,6 @@
 % foo - boolean - quick hack so graphs dont draw over each other
 % when foo = 1, draws histogram and averages
 
-%NOTE - might want to add the interval from read_geiger if i do any graphing in here
-%				maybe like 1:interval:(cols*interval)
-
 %needs	histogram_analyse.m
 %				chi_squared.m
 
@@ -76,13 +73,17 @@ function [chi2, fig] = data_analyse (data, pdf_type, draw, name, foo)
 		num_points = sum(data(1,:)); %ASSUME number of points is the same in each row
 		
 		% Generate pdf data
-		[average, variance] = histogram_analyse(col_mean);
+		%[average, variance] = histogram_analyse(col_mean); %Doesn't take into account variance we already have
+		average = sum( col_mean .* (0:(cols-1)) )/num_points; %same as histogram_analyse
+		variance = sum( col_var .* (0:(cols-1)) )/num_points;
+		
 		%Handle Gaussian
 		if strcmpi(pdf_type, 'gauss')
 			fprintf('Using Gaussian\n');
 			%gaussian = @(x) 1/sqrt(3*pi*variance)*exp(-power((x-average),2) /(2*variance)); %same method doesnt work for poiss
 			%normalization = integral(gaussian, 0, Inf)*num_points;
-			pdf = normpdf((1:cols), 5, 2);
+			%pdf = normpdf((1:cols), 5, 2);
+			pdf = normpdf((1:cols), average, variance);
 			normalization = trapz(pdf)*num_points;
 			fprintf('Normalization: %d\n', normalization/num_points);
  			pdf = pdf*normalization;
