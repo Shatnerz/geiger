@@ -33,18 +33,19 @@ function [chi2, fig] = data_analyse (data, pdf_type, draw, name, foo)
 	%Load data
 	[row_mean, row_var, col_mean, col_var] = histogram_analyse(data);
 	[rows, cols] = size(data);
+	num_points = sum(data(1,:)); %ASSUME number of points is the same in each row
 	
 	%Plot data if needed	
 	if draw & foo
 		fig = figure('visible','on'); %switch vis to off if it becomes a hassle
-		histogram = bar(1:cols, data(1,:), 'FaceColor',[0.8 0.8 0.8]); %plot histogram of first replica - make grey for aesthetics
+		histogram = bar(0:(cols-1), data(1,:), 'FaceColor',[0.8 0.8 0.8]); %plot histogram of first replica - make grey for aesthetics
 		hold on;
-		errorbar(1:cols, col_mean, sqrt(col_var)/2,'.k'); %plot the mean points with error
+		errorbar(0:(cols-1), col_mean, sqrt(col_var)/2,'.k'); %plot the mean points with error
 		xlabel('Number of Events','fontsize',15); %i may not have all the required fonts installed - may lead to discrepancies
    	ylabel('Frequency','fontsize',15);
 	end
 	
-	if strcmpi(pdf_type, 'both') | strcmpi(pdf_type, 'both')
+	if strcmpi(pdf_type, 'both') | strcmpi(pdf_type, 'b')
 		%This was added after the the function was finished
 		%Now we can compare and graph both simultaneously
 		
@@ -57,7 +58,7 @@ function [chi2, fig] = data_analyse (data, pdf_type, draw, name, foo)
 			%Add blank scatter plots so I can add the chi squared values to the legend
 			sig_fig = 3; %sig figs to show
 			scatter(0,0,'marker','none'); gauss_string = sprintf('\\chi^2_{Gauss} = %.*f',  (sig_fig-1)-floor(log10(abs(chi2(1)))), chi2(1)); %formats to sig figs
-			scatter(0,0,'marker','none'); poiss_string = sprintf('\\chi^2_{Poiss} = %.*f', (sig_fig-1)-floor(log10(abs(chi2(2)))), chi2(2));
+			scatter(0,0,'marker','none'); poiss_string = sprintf('\\chi^2_{Poiss} = %.*f', (sig_fig-1)-floor(log10(abs(chi2(2)))), chi2(2)); %format wont work if > 1000
 			%add a legend to the plot
 			legend('Sample trial', 'Average values', 'Ideal Gaussian', 'Ideal Poisson',gauss_string,poiss_string)
 			%save figure
@@ -65,51 +66,51 @@ function [chi2, fig] = data_analyse (data, pdf_type, draw, name, foo)
 			saveas(fig, strcat('figures/eps/',name), 'epsc');
 		end
 		
-	else
-	
-		%Analyse data
-		[row_mean, row_var, col_mean, col_var] = histogram_analyse(data);
-		[rows, cols] = size(data);
-		num_points = sum(data(1,:)); %ASSUME number of points is the same in each row
+	else	
+		%%%%%%%%%%%%%%%%%%%%% Generate pdf data %%%%%%%%%%%%%%%%%%%%%
 		
-		% Generate pdf data
 		%[average, variance] = histogram_analyse(col_mean); %Doesn't take into account variance we already have
 		average = sum( col_mean .* (0:(cols-1)) )/num_points; %same as histogram_analyse
-		variance = sum( col_var .* (0:(cols-1)) )/num_points;
+		variance = sum( col_var .* (0:(cols-1)) )/num_points
+		%sum( col_var .* (0:(cols-1)) )/(num_points^2)
+		%[avg, var] =histogram_analyse(col_mean)
+		%variance = 5;
 		
 		%Handle Gaussian
 		if strcmpi(pdf_type, 'gauss')
 			fprintf('Using Gaussian\n');
 			%gaussian = @(x) 1/sqrt(3*pi*variance)*exp(-power((x-average),2) /(2*variance)); %same method doesnt work for poiss
 			%normalization = integral(gaussian, 0, Inf)*num_points;
-			%pdf = normpdf((1:cols), 5, 2);
-			pdf = normpdf((1:cols), average, variance);
+			pdf = normpdf((0:(cols-1)), average, variance);
 			normalization = trapz(pdf)*num_points;
 			fprintf('Normalization: %d\n', normalization/num_points);
  			pdf = pdf*normalization;
  		%Handle Poisson
 		elseif strcmpi(pdf_type, 'poiss')
 			fprintf('Using Poisson\n');
-			pdf = poisspdf((1:cols), average);
+			pdf = poisspdf((0:(cols-1)), average);
 			normalization = trapz(pdf)*num_points;
 			fprintf('Normalization: %d\n', normalization/num_points);
 			pdf = pdf*normalization;
 		end
-	
+		
 		chi2 = chi_squared(col_mean,col_var,pdf);
-	
+		
 		if draw %Draw the fitted pdf's
 			if strcmpi(pdf_type, 'gauss')
+				step = 0.1; %used to smooth gaussian
+				pdf = normpdf((0:step:cols), average, variance)*normalization; %smooth the gaussian
 				color = 'red';
 				name = 'Ideal Gaussian';
+				plot(0:step:cols, pdf, color,'LineWidth',2);
 			elseif strcmpi(pdf_type, 'poiss')
+				pdf = poisspdf((0:cols), average)*normalization;
 				color = 'blue';
 				name = 'Ideal Poisson';
+				plot(0:cols, pdf, color,'LineWidth',2);
 			end
-			hold on;
-			plot(1:cols, pdf, color,'LineWidth',2);
 			legend('Sample trial', 'Average values', name);
-		end
+    end
 	end
 
 	
