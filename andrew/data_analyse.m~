@@ -22,7 +22,7 @@ function [average, variance, chi2] = data_analyse (data, pdf_type, draw, name, f
 	end
 	if nargin < 4;
 		name = 'default';
-	end
+	end/home/phys339-12/geiger lab/andrew
 	if nargin < 5;
 		foo = 1;
 	end
@@ -67,7 +67,7 @@ function [average, variance, chi2] = data_analyse (data, pdf_type, draw, name, f
 			%Add blank scatter plots so I can add the chi squared values to the legend
 			sig_fig = 3; %sig figs to show
 			scatter(0,0,'marker','none'); gauss_string = sprintf('\\chi^2_{Gauss} = %.*f',  (sig_fig-1)-floor(log10(abs(chi2(1)))), chi2(1)); %formats to sig figs
-			scatter(0,0,'marker','none'); poiss_string = sprintf('\\chi^2_{Poiss} = %.*f', (sig_fig-1)-floor(log10(abs(chi2(2)))), chi2(2)); %format wont work if > 1000
+			scatter(0,0,'marker','none'); poiss_str/home/phys339-12/geiger lab/andrewing = sprintf('\\chi^2_{Poiss} = %.*f', (sig_fig-1)-floor(log10(abs(chi2(2)))), chi2(2)); %format wont work if > 1000
 			%add a legend to the plot
 			errorbar(0:(cols-1), col_mean, sqrt(col_var)/2,'.k'); %plot error bars on top
 			legend('Sample trial', 'Average values', 'Ideal Gaussian', 'Ideal Poisson',gauss_string,poiss_string)

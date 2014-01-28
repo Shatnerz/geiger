@@ -12,7 +12,7 @@ function[chi_square_gaussian,chi_square_poisson] = analyse_geiger_test (data_in,
     % Uses histogram_analyse to find the column statistics for the geiger
     % data% Uses histogram_analyse to calculate the the
 	[~,~,col_mean,col_var] = histogram_analyse(data);
-   blaaaaaaaaaaahhhhhhh=7895478897978978978897978
+   
     % Column mean is the mean for each frequency (mean of all the replicas)
     % Mean geiger is the average frequency. Its calculated using
     % histogram_analyse

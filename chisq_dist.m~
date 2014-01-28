@@ -1,0 +1,4 @@
+function[] = chisq_dist (chisq,dof)
+    
+
+    dist = 1/((2.^(dof./2))*gamma(dof./2))*;
