@@ -8,7 +8,7 @@
 function [chi_squared] = chi_squared (x, var, pdf)
 
 	%Calculate chi_squared
-	[range, range] = size(x); %not sure how to just get length
+	[~, range] = size(x);
 	total = 0;
 	for i = 1:range
 		if var(i) ~= 0 %ignore whnever the variance is zero - probably just a zero column

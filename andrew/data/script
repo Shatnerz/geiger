@@ -1,0 +1,11 @@
+#!/bin/sh
+
+geiger -a -r 100 -i 100 -p 0.01 -o geiger10ms.data
+geiger -a -r 100 -i 100 -p 0.05 -o geiger50ms.data
+geiger -a -r 100 -i 100 -p 0.1 -o geiger100ms.data
+geiger -a -r 100 -i 100 -p 0.5 -o geiger500ms.data
+geiger -a -r 100 -i 100 -p 1 -o geiger1000ms.data
+geiger -a -r 100 -i 100 -p 1.5 -o geiger1500ms.data
+geiger -a -r 100 -i 100 -p 2 -o geiger2000ms.data
+
+chmod g+rwx ./*.data
